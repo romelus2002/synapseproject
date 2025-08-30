@@ -1,0 +1,17 @@
+{
+	"name": "trigger3",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/source/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/e115460d-c917-470c-b79a-0769ee653dba/resourceGroups/covid19-rg/providers/Microsoft.Storage/storageAccounts/datalakegencanadacentral",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

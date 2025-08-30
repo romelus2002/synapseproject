@@ -1,0 +1,32 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 21,
+				"startTime": "2025-09-10T01:29:00",
+				"timeZone": "Mountain Standard Time",
+				"schedule": {
+					"minutes": [
+						23
+					],
+					"hours": [
+						10
+					]
+				}
+			}
+		}
+	}
+}

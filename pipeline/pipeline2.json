@@ -53,33 +53,9 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Set variable1",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "",
-								"value": {
-									"value": "@item().websource_file",
-									"type": "Expression"
-								}
-							}
-						},
-						{
 							"name": "Copy datah",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,

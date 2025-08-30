@@ -55,6 +55,10 @@
 							"websource_file": {
 								"value": "@pipeline().parameters.web_file_name",
 								"type": "Expression"
+							},
+							"folder_name": {
+								"value": "@pipeline().parameters.foldername",
+								"type": "Expression"
 							}
 						}
 					}
@@ -79,6 +83,9 @@
 				"type": "string"
 			},
 			"raw_file_name": {
+				"type": "string"
+			},
+			"foldername": {
 				"type": "string"
 			}
 		},

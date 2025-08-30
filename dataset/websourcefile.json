@@ -3,10 +3,19 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"foldername": {
+					"value": "@dataset().folder_name",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"websource_file": {
+				"type": "string"
+			},
+			"folder_name": {
 				"type": "string"
 			}
 		},
@@ -19,7 +28,10 @@
 					"value": "@dataset().websource_file",
 					"type": "Expression"
 				},
-				"folderPath": "uploadfile2",
+				"folderPath": {
+					"value": "@dataset().folder_name",
+					"type": "Expression"
+				},
 				"container": "covidfiles"
 			},
 			"columnDelimiter": ",",

@@ -62,7 +62,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "web_file_name",
+								"variableName": "",
 								"value": {
 									"value": "@item().websource_file",
 									"type": "Expression"
@@ -73,9 +73,15 @@
 				}
 			}
 		],
-		"variables": {
+		"parameters": {
 			"web_file_name": {
-				"type": "String"
+				"type": "string"
+			},
+			"souce_file_name": {
+				"type": "string"
+			},
+			"folder_name": {
+				"type": "string"
 			}
 		},
 		"annotations": [],

@@ -64,7 +64,7 @@
 							"typeProperties": {
 								"variableName": "web_file_name",
 								"value": {
-									"value": "@item().web_file_name",
+									"value": "@item().websource_file",
 									"type": "Expression"
 								}
 							}

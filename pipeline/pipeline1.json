@@ -25,7 +25,8 @@
 					{
 						"activity": "Validation1",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],

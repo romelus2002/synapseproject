@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText22",
+	"name": "webdata",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HttpServer1",

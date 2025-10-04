@@ -87,44 +87,8 @@
 										"fileExtension": ".txt"
 									}
 								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "websourcefile",
-									"type": "DatasetReference",
-									"parameters": {
-										"websource_file": {
-											"value": "@item().websource_file",
-											"type": "Expression"
-										},
-										"folder_name": {
-											"value": "@item().folder_name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "casedeaths_imported",
-									"type": "DatasetReference",
-									"parameters": {
-										"raw_imported_file": {
-											"value": "@item().raw_file_name",
-											"type": "Expression"
-										}
-									}
-								}
-							]
+								"enableStaging": false
+							}
 						}
 					]
 				}

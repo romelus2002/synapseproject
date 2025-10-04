@@ -5,26 +5,14 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "alldata",
-						"type": "DatasetReference"
-					},
 					"name": "datafilterineuropeonly"
 				},
 				{
-					"dataset": {
-						"referenceName": "rawcountry",
-						"type": "DatasetReference"
-					},
 					"name": "countrylookup"
 				}
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "DelimitedText23",
-						"type": "DatasetReference"
-					},
 					"name": "processeddata",
 					"rejectedDataLinkedService": {
 						"referenceName": "AzureDataLakeStorage1",
@@ -63,8 +51,7 @@
 				"          source as string",
 				"     ),",
 				"     allowSchemaDrift: false,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> datafilterineuropeonly",
+				"     validateSchema: false) ~> datafilterineuropeonly",
 				"source(output(",
 				"          country as string,",
 				"          country_code_2_digit as string,",
@@ -73,8 +60,7 @@
 				"          population as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> countrylookup",
+				"     validateSchema: false) ~> countrylookup",
 				"datafilterineuropeonly filter(continent=='Europe' && not(isNull(country_code))) ~> filter1",
 				"filter1 select(mapColumn(",
 				"          country,",
@@ -94,7 +80,7 @@
 				"          daily_count,",
 				"          source,",
 				"          reporteddate,",
-				"          country_with_code = country + country_code),",
+				"          country_with_code = country+country_code),",
 				"     pivotBy(indicator, ['confirmed cases', 'deaths']),",
 				"     count = sum(daily_count),",
 				"     columnNaming: '$V$N',",
@@ -119,11 +105,10 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> processeddata"
+				"     skipDuplicateMapOutputs: true,",
+				"     preCommands: [],",
+				"     postCommands: []) ~> processeddata"
 			]
 		}
 	}

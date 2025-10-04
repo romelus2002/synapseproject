@@ -74,6 +74,41 @@
 						"value": "@equals(activity('get_the_number_of_row').output.columnCount,13)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "WebHook1",
+							"type": "WebHook",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": "https://prod-29.canadacentral.logic.azure.com:443/workflows/6320c381c55b4d1e9b2387d206c70c58/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=n2P7mm7SJ4EVgsT57elf11yZ8zhG0Rl7Pl58t6hjCHA",
+								"method": "POST",
+								"body": "dummy",
+								"timeout": "00:10:00"
+							}
+						},
+						{
+							"name": "Fail1",
+							"type": "Fail",
+							"dependsOn": [
+								{
+									"activity": "WebHook1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "the condition is not met",
+								"errorCode": "500"
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Copy data1",

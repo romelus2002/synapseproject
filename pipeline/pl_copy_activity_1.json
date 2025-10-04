@@ -1,15 +1,15 @@
 {
-	"name": "pipeline1",
+	"name": "pl_copy_activity_1",
 	"properties": {
 		"activities": [
 			{
-				"name": "Validation1",
+				"name": "size_file_check",
 				"type": "Validation",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "DelimitedText1",
+						"referenceName": "blob_storage_data",
 						"type": "DatasetReference"
 					},
 					"timeout": "0.12:00:00",
@@ -18,15 +18,14 @@
 				}
 			},
 			{
-				"name": "get_file_metadata",
+				"name": "get_the_number_of_row",
 				"description": "check the number of row",
 				"type": "GetMetadata",
 				"dependsOn": [
 					{
-						"activity": "Validation1",
+						"activity": "size_file_check",
 						"dependencyConditions": [
-							"Succeeded",
-							"Failed"
+							"Succeeded"
 						]
 					}
 				],
@@ -40,17 +39,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "DelimitedText1",
+						"referenceName": "blob_storage_data",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"columnCount",
-						"size",
-						"exists"
+						"itemName",
+						"itemType",
+						"lastModified"
 					],
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
+						"type": "AzureBlobStorageReadSettings",
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -63,7 +62,7 @@
 				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "get_file_metadata",
+						"activity": "get_the_number_of_row",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -72,29 +71,9 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('get_file_metadata').output.columnCount,13)",
+						"value": "@equals(activity('get_the_number_of_row').output.columnCount,13)",
 						"type": "Expression"
 					},
-					"ifFalseActivities": [
-						{
-							"name": "Web1",
-							"type": "WebActivity",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"method": "POST",
-								"url": "https://file_imcompatible",
-								"body": "dummy"
-							}
-						}
-					],
 					"ifTrueActivities": [
 						{
 							"name": "Copy data1",
@@ -112,7 +91,7 @@
 								"source": {
 									"type": "DelimitedTextSource",
 									"storeSettings": {
-										"type": "AzureBlobFSReadSettings",
+										"type": "AzureBlobStorageReadSettings",
 										"recursive": true,
 										"enablePartitionDiscovery": false
 									},
@@ -123,7 +102,8 @@
 								"sink": {
 									"type": "DelimitedTextSink",
 									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
+										"type": "AzureBlobFSWriteSettings",
+										"copyBehavior": "PreserveHierarchy"
 									},
 									"formatSettings": {
 										"type": "DelimitedTextWriteSettings",
@@ -143,57 +123,55 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DelimitedText1",
+									"referenceName": "blob_storage_data",
 									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "DelimitedText2",
+									"referenceName": "raw_population",
 									"type": "DatasetReference"
 								}
 							]
-						},
-						{
-							"name": "Delete1",
-							"type": "Delete",
-							"dependsOn": [
-								{
-									"activity": "Copy data1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "DelimitedText1",
-									"type": "DatasetReference"
-								},
-								"logStorageSettings": {
-									"linkedServiceName": {
-										"referenceName": "AzureDataLakeStorage1",
-										"type": "LinkedServiceReference"
-									},
-									"path": "target1"
-								},
-								"enableLogging": true,
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"enablePartitionDiscovery": false
-								}
-							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Web2",
+				"description": "Send API to logic app",
+				"type": "WebActivity",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "size_file_check",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "get_the_number_of_row",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 10,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-29.canadacentral.logic.azure.com:443/workflows/6320c381c55b4d1e9b2387d206c70c58/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=n2P7mm7SJ4EVgsT57elf11yZ8zhG0Rl7Pl58t6hjCHA",
+					"authentication": {
+						"type": "MSI",
+						"resource": "logic app"
+					}
 				}
 			}
 		],
